@@ -738,11 +738,12 @@ namespace DialogueEditor
                         GUILayout.Label("Video Options", EditorStyles.boldLabel);
                         GUILayout.Label("Video");
                         node.video = (VideoClip)EditorGUILayout.ObjectField(node.video, typeof(VideoClip), false);
-
-                        GUILayout.Label("Video Volume");
-                        node.Volume = EditorGUILayout.Slider(node.Volume, 0, 1);
                         EditorGUILayout.Space();
 
+                        /*
+                        GUILayout.Label("Video Volume");
+                        node.Volume = EditorGUILayout.Slider(node.Volume, 0, 1);
+                        */
                         GUILayout.Label("TMP Font", EditorStyles.boldLabel);
                         node.TMPFont = (TMPro.TMP_FontAsset)EditorGUILayout.ObjectField(node.TMPFont, typeof(TMPro.TMP_FontAsset), false);
                         EditorGUILayout.Space();

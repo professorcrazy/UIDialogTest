@@ -69,7 +69,7 @@ namespace DialogueEditor
         public Sprite Icon;
 
         public VideoClip Video;
-        public float Volume;
+        //public float Volume;
 
         /// <summary> UnityEvent, to betriggered when this Node starts. </summary>
         public UnityEngine.Events.UnityEvent Event;

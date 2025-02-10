@@ -392,7 +392,7 @@ namespace DialogueEditor
             speech.TMPFont = editableNode.TMPFont;
             speech.Icon = editableNode.Icon;
             speech.Video = editableNode.video;
-            speech.Volume = editableNode.Volume;
+            //speech.Volume = editableNode.Volume;
 
             CopyParamActions(editableNode, speech);
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -157,6 +158,7 @@ namespace DialogueEditor
 
         public void EndConversation()
         {
+            StopAllCoroutines();
             SetState(eState.TransitioningDialogueOff);
 
             if (OnConversationEnded != null)
@@ -393,6 +395,7 @@ namespace DialogueEditor
             }
         }
 
+        //This is what loads the next speach node
         private void TransitionOptionsOff_Update()
         {
             m_stateTime += Time.deltaTime;
@@ -401,28 +404,8 @@ namespace DialogueEditor
             if (t > 1)
             {
                 ClearOptions();
+                StartCoroutine(CreateNewSpeach());
 
-                if (m_currentSpeech.AutomaticallyAdvance)
-                {
-                    if (IsAutoAdvance())
-                        return;
-                }
-
-                if (m_selectedOption == null)
-                {
-                    EndConversation();
-                    return;
-                }
-
-                SpeechNode nextSpeech = GetValidSpeechOfNode(m_selectedOption);
-                if (nextSpeech == null)
-                {
-                    EndConversation();
-                }
-                else
-                {
-                    SetupSpeech(nextSpeech);
-                }
                 return;
             }
 
@@ -448,8 +431,39 @@ namespace DialogueEditor
             SetColorAlpha(NpcIcon, 1 - t);
             SetColorAlpha(NameText, 1 - t);
         }
+        bool loadNext = false;
+        public IEnumerator CreateNewSpeach() {
+            if (m_currentSpeech.AutomaticallyAdvance) {
+                if (IsAutoAdvance()) { }
+                    //StopCoroutine(CreateNewSpeach());
+            }
 
+            if (m_selectedOption == null) {
+                EndConversation();
+                //StopCoroutine(CreateNewSpeach());
+            }
+            
+            SpeechNode nextSpeech = GetValidSpeechOfNode(m_selectedOption);
+            while (!VideoController.instance.videoTimeMarker) {
+                yield return null;
+                Debug.Log("VideoPlaying");
+                loadNext = true;
+            }
+            if (loadNext == true) {
+                Debug.Log("Video 80%");
+                yield return new WaitForEndOfFrame();
+                Debug.Log("info: " + Time.time.ToString() + " : " + nextSpeech.Text);
 
+                if (nextSpeech == null) {
+                    EndConversation();
+                }
+                else {
+                    SetupSpeech(nextSpeech);
+                    VideoController.instance.videoTimeMarker = false;
+                }
+                loadNext = false;
+            }
+        }
 
 
         //--------------------------------------
